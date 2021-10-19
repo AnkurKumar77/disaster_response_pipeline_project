@@ -52,7 +52,7 @@ def save_data(df, database_filename):
     '''
     saves the dataframe in a sqlite database in a table "msg_cat"
     '''
-    engine = create_engine(f'sqlite:///{database_filename.db}')
+    engine = create_engine(f'sqlite:///{database_filename}')
     df.to_sql('msg_cat', engine, index=False)
 
 

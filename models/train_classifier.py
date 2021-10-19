@@ -32,7 +32,7 @@ def load_data(database_filepath):
 
     '''
     
-    engine = create_engine(f'sqlite:///{database_filepath.db}')
+    engine = create_engine(f'sqlite:///{database_filepath}')
     df = pd.read_sql_table("msg_cat",engine)   # Loading the data from msg_cat table
     
     X = df.message   # Extracting input data   
