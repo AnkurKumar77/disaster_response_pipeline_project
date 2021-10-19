@@ -8,9 +8,11 @@ def load_data(messages_filepath, categories_filepath):
     and returns the resulting dataframe
     
     '''
-
-    messages=pd.read_csv(messages_filepath)
+    # Reading the datasets
+    messages=pd.read_csv(messages_filepath)     
     categories=pd.read_csv(categories_filepath)
+
+    # Merging the datasets
     df=messages.merge(categories, on="id")
     return df
 
@@ -24,13 +26,14 @@ def clean_data(df):
         Output
             df: cleaned dataframe    
     '''
-    categories = df.categories.str.split(";",expand=True)
+    #splitting the categories column into seperate columns
+    categories = df.categories.str.split(";",expand=True) 
     
     row = categories.iloc[0]
 
     category_colnames = row.apply(lambda x:x[:-2])
     
-    categories.columns = category_colnames
+    categories.columns = category_colnames  # retrieving the category names
     
     for column in categories:
       
@@ -38,6 +41,7 @@ def clean_data(df):
 
         categories[column] = categories[column].astype("int")
 
+    # dropping the original categories column
 
     df.drop("categories",axis=1,inplace=True)
     df = pd.concat([df,categories],axis=1)

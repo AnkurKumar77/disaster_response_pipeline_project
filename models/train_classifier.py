@@ -33,11 +33,11 @@ def load_data(database_filepath):
     '''
     
     engine = create_engine(f'sqlite:///{database_filepath.db}')
-    df = pd.read_sql_table("msg_cat",engine)
+    df = pd.read_sql_table("msg_cat",engine)   # Loading the data from msg_cat table
     
-    X = df.message    
-    Y =df.iloc[:,4:] 
-    
+    X = df.message   # Extracting input data   
+    Y =df.iloc[:,4:] # Extracting target data
+
     category_names=list(Y.columns)
     Y.related.replace(2,1,inplace=True)
     
@@ -55,9 +55,9 @@ def tokenize(text):
         tokens: cleaned tokens list   
     '''
     
-    lemmatizer=WordNetLemmatizer()
+    lemmatizer=WordNetLemmatizer()  # lemmatizing the text
     text=re.sub(r"^[a-zA-Z0-9]"," ",text.lower())
-    tokens=word_tokenize(text)
+    tokens=word_tokenize(text)      # tokenizing the text
     tokens=[lemmatizer.lemmatize(w) for w in tokens if w not in stopwords.words("english")]
     return tokens
     
@@ -73,12 +73,13 @@ def build_model():
 
         cv: model
     '''
-    
+    # Creating the pipeling
     pipeline = Pipeline([
     ("vect",CountVectorizer(tokenizer=tokenize)),
     ("tfidf",TfidfTransformer()),
     ("clf",MultiOutputClassifier(ExtraTreesClassifier()))
 ])
+    # Selecting some parameter values for checking using GridSearchCV
     parameters = {
     "vect__max_df":(0.75,1.0),
     "tfidf__use_idf":(True,False)
@@ -98,6 +99,7 @@ def evaluate_model(model, X_test, Y_test, category_names):
     y_pred=pd.DataFrame(y_pred,columns=category_names)
     for col in category_names:
         print(col.upper())
+        # Using classification_report for calculating the precision,recall and f1 score for the model
         print(classification_report(Y_test.loc[:,col],y_pred.loc[:,col]))
 
 
