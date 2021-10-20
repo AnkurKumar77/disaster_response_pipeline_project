@@ -45,6 +45,7 @@ def clean_data(df):
 
     df.drop("categories",axis=1,inplace=True)
     df = pd.concat([df,categories],axis=1)
+    df.related.replace(2,1,inplace=True)
     df.drop_duplicates(inplace=True)
     return df
     
@@ -53,7 +54,7 @@ def save_data(df, database_filename):
     saves the dataframe in a sqlite database in a table "msg_cat"
     '''
     engine = create_engine(f'sqlite:///{database_filename}')
-    df.to_sql('msg_cat', engine, index=False)
+    df.to_sql('msg_cat', engine, index=False,if_exists="replace") #storing and overwriting if table already exists
 
 
 def main():
